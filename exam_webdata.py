@@ -27,7 +27,7 @@ def search_naver_news(query: str):
     response = requests.get(url, headers=headers, params=params)
     
     if response.status_code == 200:
-        items = response.json().get('item', [])
+        items = response.json().get('items', [])
         today_str = datetime.now().strftime("%d %b %Y") # 예: 20 Feb 2026
         
         # 오늘 날짜와 일치하는 기사만 필터링
@@ -67,7 +67,7 @@ config = types.GenerateContentConfig(
     1. 반드시 '오늘(금일)' 배포된 뉴스 개수만 언급할 것.
     2. 개수가 100개 이상이면 "오늘 하루에만 100건 이상의 기사가 쏟아졌습니다"라고 강조할 것.
     3. 결과는 반드시 다음과 같은 표(Table) 또는 리스트 형식으로 출력할 것. 
-    4. 분석 결과에 대해 'PR적 위기' 또는 '기회'인지 한 줄 평을 남길 것.
+    4. 분석 결과에 대해 'PR적 위기' 또는 '기회'인지 분석한 뒤 한 줄 평을 남길 것.
     ''',
     tools=[search_naver_news ]
 )
@@ -75,7 +75,7 @@ config = types.GenerateContentConfig(
 
 def get_response(question):
     response = client._models.generate_content(
-        model= 'gemini-3-flash-preview',
+        model= 'gemini-2.5-flash-lite',
         contents = question,
         config= config
     )
@@ -113,7 +113,7 @@ st.markdown('---')
 #3-1. messages라는 이름의 변수가 session_state에 존재하는지 확인 후 없으면 첫 문자 지정
 if 'messages' not in st.session_state:
     st.session_state.messages = [
-        {'role':'assistant', 'content':'배포된 뉴스 총계를 알려주세요'}
+        {'role':'assistant', 'content':'보도 배포 현황이 궁금한 기업을 입력'}
     ]
 
 #3-2. session_state에 저장된 'messages'의 메시지를 채팅 ui로 그려내기
