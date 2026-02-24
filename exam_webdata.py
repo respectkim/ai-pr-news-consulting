@@ -39,7 +39,7 @@ def search_naver_news(query: str):
         return {
             "today_count": len(today_items),
             "is_more_than_100": len(today_items) >= 100,
-            "news_titles": [item['title'].replace('<b>', '').replace('</b>', '') for item in today_items[:3]]
+            "news_titles": [item['title'].replace('<b>', '').replace('</b>', '').replace('<br>','') for item in today_items[:3]]
         }
     return {"error": "API 호출 실패"}
 
@@ -75,7 +75,7 @@ config = types.GenerateContentConfig(
 
 def get_response(question):
     response = client._models.generate_content(
-        model= 'gemini-2.5-flash-lite',
+        model= 'gemini-3-flash-preview',
         contents = question,
         config= config
     )
